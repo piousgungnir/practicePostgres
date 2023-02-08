@@ -1,0 +1,16 @@
+CMakeFiles
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+compile_commands.json
+CMakeLists.txt.user*
+
+build
+build-*-Debug
+install_manifest.txt
+
+.vscode
+
+*.drawio.bkp
+
+MessageList.txt

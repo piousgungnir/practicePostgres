@@ -1,0 +1,35 @@
+﻿BasedOnStyle: WebKit
+AlignAfterOpenBracket: Align
+# AlignConsecutiveAssignments: None
+# AlignOperands: AlignAfterOperator
+BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+Cpp11BracedListStyle: true
+CompactNamespaces: true
+IndentCaseLabels: false
+IndentWidth: '4'
+IndentWrappedFunctionNames: false
+Language: Cpp
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: None
+# PenaltyBreakString: 100
+PointerAlignment: Middle
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeCpp11BracedList: false
+Standard: c++17
+TabWidth: 4
+UseTab: Never
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+FixNamespaceComments: true
+# QualifierAlignment: Left
+# PackConstructorInitializers: NextLine
