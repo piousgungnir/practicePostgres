@@ -18,7 +18,7 @@ enum class Mode : uint8_t
     Mode1               = 0x41,
     Mode2,
     Mode3A,
-    ModeC               = 0x45,
+    ModeC               = 0x45,//+
 
     // Короткий P4
     Intermode1          = 0x49,
@@ -26,7 +26,7 @@ enum class Mode : uint8_t
     IntermodeA,
     IntermodeC          = 0x4D,
 
-    ModeS               = 0x50,
+    ModeS               = 0x50,//+
     // Комбинированый запрос Межрежимный только RBS и Режим S
     // TODO (oprikov_el): выпилить коды комбинированых режимов из публичной части запросчика.
     // Код комбинированного режима должен формироваться в реализации запросчика исходя из сочетания двух одиночных запросов
@@ -69,7 +69,7 @@ inline bool isMark(const Mode &mode) noexcept
            mode == Mode::Mode2 or
            mode == Mode::Mode4;
 }
-inline bool isRbs(const Mode &mode) noexcept
+inline bool isRbs(const Mode &mode) noexcept//+
 {
     return mode == Mode::Mode1 or
             mode == Mode::Mode2 or
@@ -92,7 +92,7 @@ inline bool canCombined(const Mode &mode) noexcept
            mode == Mode::Mode3A or
            mode == Mode::ModeC;
 }
-inline bool isS(const Mode &mode) noexcept
+inline bool isS(const Mode &mode) noexcept//+
 {
     return mode == Mode::ModeS or
            mode == Mode::Intermode1_ModeS or

@@ -97,6 +97,7 @@ struct CoordinatePoint
         uint8_t acasStatus;                       // для I048/230
         uint8_t acasParameters;                   // для I048/230
         std::vector<MBData> mbdata;               // для I048/250
+
         std::vector<MBData> outdatedBds;          // устаревшие регистры
         std::vector<uint8_t> supportedBds;        // поддерживаемые регистры
         std::vector<uint8_t> usefullDataBds;      // регистры наполненные полезными данными

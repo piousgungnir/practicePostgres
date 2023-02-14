@@ -187,14 +187,14 @@ union ExtendedInfo
             struct _Parol_Mode4 parol_mode4;
             struct _Parol_Mode6 parol_mode6;
 
-            struct _RBS_ModeOther rbs_modeOther;
+            struct _RBS_ModeOther rbs_modeOther; //+
             struct _RBS_Mode4 rbs_mode4;
             uint32_t _ser_value;
         };
         uint32_t _reserved[4 - 1];
     };
 
-    _S_Data modeS;
+    _S_Data modeS; //+
 };
 
 
@@ -216,7 +216,7 @@ union ResponseSignalInfo
     }
 
     /* Для каждого ответного сигнала */
-    struct
+    struct //?
     {
         uint32_t Dos : 20; /* дальность ОС (кроме пеленгов АШП/ХИП)*/
         uint32_t dDS : 10; /* Уменьшение значения Dos при расчете поправки на азимут (только для ОС режима S)*/
