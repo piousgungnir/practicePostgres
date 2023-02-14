@@ -49,7 +49,7 @@
     - uint32_t sum
     - uint32_t dif
     - uint32_t pbl
-- (POI::ResponseSignalInfo)
+- (POI::ResponseSignalInfo) тут не совсем понял как работает структура без названия(
     - uint32_t Dos : 20
     - uint32_t dDS : 10
     - uint32_t ASP : 1
