@@ -13,8 +13,10 @@ set(SOURCES_INCLUDE )
 include("${CMAKE_CURRENT_LIST_DIR}/src/CmakeListsInclude.cmake")
 include_directories("${PROJECT_SOURCE_DIR}/src")#хороший ли путь?
 
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+find_package(libpqxx REQUIRED)
 
-set(ssr_pdp_report_lib ${HEADERS_INCLUDE} ${SOURCES_INCLUDE})
+set(ssr_pdp_report_lib ${HEADERS_INCLUDE} ${SOURCES_INCLUDE} src/database.hpp)
 
 add_library(libssrpdpreport STATIC ${ssr_pdp_report_lib})
 
@@ -33,6 +35,7 @@ add_executable(${PROJECT_NAME} "src/main.cpp")
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
     libssrpdpreport
+        libpqxx::pqxx
 )
 
 
