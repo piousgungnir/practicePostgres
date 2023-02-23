@@ -4,15 +4,53 @@
 int main()
 {
     impl::CoordinatePoint cp;
-    DB::PostgresCPRepository PRep("postgresql://localhost:5432/default_database?user=username&password=password", false);
-//    PRep.addCoordinatePoint(cp);
-    PRep.getByIdCoordinatePoint("5");
-    auto responseCP = PRep.getByIdCoordinatePoint("5");
+    DB::PostgresCPRepository PRep("postgresql://localhost:5432/default_database?user=username&password=password");
+    PRep.addCoordinatePoint(cp);
+    PRep.getByIdCoordinatePoint(5);
+    auto responseCP = PRep.getByIdCoordinatePoint(5);
     std::cout << "idcp: " << responseCP.idCoordinatePoint << std::endl;
-    std::cout << "range: " << responseCP.range << std::endl;
-    std::cout << "amplitude: " << responseCP.amplitude << std::endl;
-    std::cout << "mode: " << responseCP.mode << std::endl;
-    std::cout << "heightIsGarbled: " << responseCP.heightIsGarbled << std::endl;
+
+//    Timestamp st;
+//
+//    impl::PelengatedInfo rd{1,1,1,1,1,1};
+//
+//    POI::ResponseSignalInfo exif;
+//    exif.Dos;
+//    exif.dDS;
+//    exif.ASP;
+//    exif.HIP;
+//    exif.mode;
+//
+//    exif.exInfo.rbs_modeOther.Code;
+//    exif.exInfo.rbs_modeOther.nCode;
+//    exif.exInfo.rbs_modeOther.nSPI;
+//    exif.exInfo.rbs_modeOther.PBL;
+//    exif.exInfo.rbs_modeOther.AW;
+//
+//    exif.exInfo.modeS.data[0];
+//    exif.exInfo.modeS.data[1];
+//    exif.exInfo.modeS.data[2];
+//    exif.exInfo.modeS.data[3];
+//    exif.exInfo.modeS.BDS1;
+//    exif.exInfo.modeS.BDS2;
+//    exif.exInfo.modeS.sicAllCall;
+//    exif.exInfo.modeS.PC_type;
+//    exif.exInfo.modeS.PC_EC;
+//
+//    impl::RawAnswer rans{st, rd, exif};
+//
+//    impl::Answer ans(rans);
+//    ans.monopulseAzimuth;
+//    ans.monopulseCorrection;
+//    ans.phase;
+//    ans.distance;
+//    ans.azimuthFromDistance;
+
+
+//    std::cout << "range: " << responseCP.range << std::endl;
+//    std::cout << "amplitude: " << responseCP.amplitude << std::endl;
+//    std::cout << "mode: " << responseCP.mode << std::endl;
+//    std::cout << "heightIsGarbled: " << responseCP.heightIsGarbled << std::endl;
 
 //    //ответы имеются разных типов
 //    // RBS, S, НРЗ
