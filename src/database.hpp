@@ -64,9 +64,9 @@ public:
                  "    height_is_garbled       bool);");
 
         txn.exec("CREATE TABLE IF NOT EXISTS rbs_reply"
-                 "( id_coordinate_point   bigint    not null"
-                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
-                 "            references coordinate_point,"
+                 "( id_coordinate_point   bigint    not null,"
+//                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
+//                 "            references coordinate_point,"
                  "    time_reply                 text          not null,"
                  "    distance                        double precision,"
                  "    azimuth                         double precision,"
@@ -75,12 +75,12 @@ public:
                  "    dif_ampl                        numeric,"
                  "    pbl_ampl                        numeric,"
                  "    mode                            integer,"
-                 "    code                            bit varying(13),"
-                 "    spi                             bit varying(1),"
-                 "    n_code                          bit varying(13),"
-                 "    n_spi                           bit varying(1),"
-                 "    is_under_pbl                    bit varying(1),"
-                 "    aw                              bit varying(1),"
+                 "    code                            numeric,"
+                 "    spi                             numeric,"
+                 "    n_code                          numeric,"
+                 "    n_spi                           numeric,"
+                 "    is_under_pbl                    numeric,"
+                 "    aw                              numeric,"
                  "    monopulse_azimuth               double precision,"
                  "    monopulse_correction            double precision,"
                  "    processed_phase                 double precision,"
@@ -89,9 +89,9 @@ public:
                  ");");
 
         txn.exec("CREATE TABLE IF NOT EXISTS s_reply"
-                 "( id_coordinate_point   bigint    not null"
-                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
-                 "            references coordinate_point,"
+                 "( id_coordinate_point   bigint    not null,"
+//                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
+//                 "            references coordinate_point,"
                  "    time_reply         text         not null,"
                  "    distance                double precision,"
                  "    azimuth                 double precision,"
@@ -150,11 +150,11 @@ public:
                             "WHERE id_coordinate_point = $1");
 
         connection->prepare("get_rbs_reply_by_id",
-                            "SELECT * FROM coordinate_point "
+                            "SELECT * FROM rbs_reply "
                             "WHERE id_coordinate_point = $1");
 
         connection->prepare("get_s_reply_by_id",
-                            "SELECT * FROM coordinate_point "
+                            "SELECT * FROM s_reply "
                             "WHERE id_coordinate_point = $1");
     }
 
@@ -171,27 +171,23 @@ public:
                           1, 1, 1, 1, 1,
                           false,false,false,false,false,
                           false,false,false);
+//        std::stringstream RBSss;
+//        cp.timestamp = std::chrono::high_resolution_clock::now();
+//        RBSss << std::chrono::high_resolution_clock::to_time_t(reply->raw.timestamp);
 
-        for(const Response& reply : cp.pack ){
-            std::stringstream Rss;
-            cp.timestamp = std::chrono::high_resolution_clock::now();
-            Rss << std::chrono::high_resolution_clock::to_time_t(reply->raw.timestamp);
-            if(isRbs(reply->raw.info.mode)){
-                txn.exec_prepared("add_rbs_reply",
-                                  5, Rss.str() , 1.0, 1.0, 1.0,
-                                  1, 1, 1, 1, 1,
-                                  1, 1, 1, 1, 1,
-                                  1.0, 1.0, 1.0, 1.0, 1.0);
-            }
-            if(isS(reply->raw.info.mode)){
-                txn.exec_prepared("add_s_reply",
-                                  5, Rss.str(),1.0,1.0,1.0,
-                                  1, 1, 1, 1, 1,
-                                  1, 1, 1, 1, 1,
-                                  1, 1, 1,
-                                  1.0, 1.0, 1.0, 1.0, 1.0);
-            }
-        }
+        txn.exec_prepared("add_rbs_reply",
+                          5, Css.str(), 1.0, 1.0, 1.0,
+                          1, 1, 1, 1, 1,
+                          1, 1, 1, 1, 1,
+                          1.0, 1.0, 1.0, 1.0);
+
+        txn.exec_prepared("add_s_reply",
+                          5, Css.str(),1.0,1.0,1.0,
+                          1, 1, 1, 1, 1,
+                          1, 1, 1, 1, 1,
+                          1, 1, 1,
+                          1.0, 1.0, 1.0, 1.0);
+
 //        это результат, выше код для теста
 //        txn.exec_prepared("add_coordinate_point",
 //                          cp.idCoordinatePoint, timestamp_to_str_datetime(cp.timestamp) , cp.range, cp.azimuth, cp.amplitude,
@@ -253,7 +249,23 @@ public:
         cp.bortNumberIsGarbled = response_cp[0][16].as<bool>();
         cp.heightIsGarbled = response_cp[0][17].as<bool>();
 
+//        auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", id_coordinate_point);
+//        for(int i = 0; i < response_rbs.size(); i++){
+//            std::cout << "RBS check " << response_rbs[i][0].as<int>() << std::endl;
+//        }
+//
+//        std::cout << "RBS check " << response_rbs[0][0].as<int>() << std::endl;
+//        std::cout << "RBS check " << response_rbs[1][0].as<int>() << std::endl;
+//        std::cout << "RBS check " << response_rbs[2][0].as<int>() << std::endl;
+
+
+
         auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", id_coordinate_point);
+        for (auto const &row: response_rbs)
+        {
+            std::cout << row[1].c_str() << '\t';
+            std::cout << std::endl;
+        }
         for(auto reply_rbs : response_rbs){
 //            тя же ло
             Timestamp ts ; // уже не TODO каст времени в строку

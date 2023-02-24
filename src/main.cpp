@@ -5,8 +5,8 @@ int main()
 {
     impl::CoordinatePoint cp;
     DB::PostgresCPRepository PRep("postgresql://localhost:5432/default_database?user=username&password=password");
-    PRep.addCoordinatePoint(cp);
-    PRep.getByIdCoordinatePoint(5);
+//    PRep.addCoordinatePoint(cp);
+//    PRep.getByIdCoordinatePoint(5);
     auto responseCP = PRep.getByIdCoordinatePoint(5);
     std::cout << "idcp: " << responseCP.idCoordinatePoint << std::endl;
 //    std::cout << "Time: " << timestamp_to_str_datetime(responseCP.timestamp) << std::endl;
