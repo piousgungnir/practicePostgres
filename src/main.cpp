@@ -9,7 +9,7 @@ int main()
     PRep.getByIdCoordinatePoint(5);
     auto responseCP = PRep.getByIdCoordinatePoint(5);
     std::cout << "idcp: " << responseCP.idCoordinatePoint << std::endl;
-    std::cout << "Time: " << timestamp_to_str_datetime(responseCP.timestamp) << std::endl;
+//    std::cout << "Time: " << timestamp_to_str_datetime(responseCP.timestamp) << std::endl;
 
 //    Timestamp st;
 //

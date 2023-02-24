@@ -162,23 +162,30 @@ public:
         // Start a transaction
         pqxx::work txn(*connection);
 
+        std::stringstream Css;
+        cp.timestamp = std::chrono::high_resolution_clock::now();
+        Css << std::chrono::high_resolution_clock::to_time_t(cp.timestamp);
+
         txn.exec_prepared("add_coordinate_point",
-                          5, timestamp_to_str_datetime(cp.timestamp) , 1, 1, 1,
+                          5, Css.str(), 1, 1, 1,
                           1, 1, 1, 1, 1,
                           false,false,false,false,false,
                           false,false,false);
 
         for(const Response& reply : cp.pack ){
+            std::stringstream Rss;
+            cp.timestamp = std::chrono::high_resolution_clock::now();
+            Rss << std::chrono::high_resolution_clock::to_time_t(reply->raw.timestamp);
             if(isRbs(reply->raw.info.mode)){
                 txn.exec_prepared("add_rbs_reply",
-                                  5, timestamp_to_str_datetime(cp.timestamp) , 1.0, 1.0, 1.0,
+                                  5, Rss.str() , 1.0, 1.0, 1.0,
                                   1, 1, 1, 1, 1,
                                   1, 1, 1, 1, 1,
                                   1.0, 1.0, 1.0, 1.0, 1.0);
             }
             if(isS(reply->raw.info.mode)){
                 txn.exec_prepared("add_s_reply",
-                                  5, timestamp_to_str_datetime(cp.timestamp) ,1.0,1.0,1.0,
+                                  5, Rss.str(),1.0,1.0,1.0,
                                   1, 1, 1, 1, 1,
                                   1, 1, 1, 1, 1,
                                   1, 1, 1,
@@ -214,40 +221,20 @@ public:
         txn.commit();
     }
 
-//    нагулил магию
-    template < typename TimePoint >
-    bool fromString(TimePoint& timePoint, const std::string& str)
-    {
-        std::istringstream iss(str);
-        std::tm tm{};
-        if (!(iss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S")))
-            return false;
-        timePoint  = {};
-        timePoint += std::chrono::seconds(std::mktime(&tm));
-        if (iss.eof())
-            return true;
-        if (iss.get() != '.')
-            return false;
-        std::string zz;
-        if (!(iss >> zz))
-            return false;
-        static_assert(std::chrono::high_resolution_clock::period::num == 1 && std::chrono::high_resolution_clock::period::den % 10 == 0);
-        zz.resize(log10(std::chrono::high_resolution_clock::period::den),'0');
-        size_t zeconds = 0;
-        try { zeconds = std::stoul(zz); } catch (const std::exception&) { return false; }
-        timePoint += std::chrono::high_resolution_clock::duration(zeconds);
-        return true;
-    }
-
     impl::CoordinatePoint getByIdCoordinatePoint(const uint & id_coordinate_point) override {
         pqxx::work txn(*connection);
         auto response_cp = txn.exec_prepared("get_coordinate_point_by_id",id_coordinate_point);
 
         impl::CoordinatePoint cp;
 
+        std::istringstream iss{response_cp[0][1].as<std::string>()};
+        std::time_t epochDateTime;
+        iss >> epochDateTime;
+        cp.timestamp = std::chrono::high_resolution_clock::from_time_t(epochDateTime);
+
 //        из-за того что полей много, так будет явней, чем способ из примера, имхо
         cp.idCoordinatePoint = response_cp[0][0].as<uint>();
-        fromString(cp.timestamp, response_cp[0][1].as<std::string>()); // уже не TODO написать каст
+//        fromString(cp.timestamp, ); // уже не TODO написать каст
         cp.range = response_cp[0][2].as<double>();
         cp.azimuth = response_cp[0][3].as<double>();
         cp.amplitude = response_cp[0][4].as<uint16_t>();
@@ -270,7 +257,7 @@ public:
         for(auto reply_rbs : response_rbs){
 //            тя же ло
             Timestamp ts ; // уже не TODO каст времени в строку
-            fromString(ts, reply_rbs[1].as<std::string>());
+//            fromString(ts, reply_rbs[1].as<std::string>());
 
             impl::PelengatedInfo rd{reply_rbs[2].as<double>(),reply_rbs[3].as<double>(),reply_rbs[4].as<double>(),
                                     reply_rbs[5].as<uint32_t>(),reply_rbs[6].as<uint32_t>(),reply_rbs[7].as<uint32_t>()};
@@ -304,7 +291,7 @@ public:
         for(auto reply_s : response_s){
             //            тя же ло
             Timestamp ts; // уже не TODO каст времени в строку
-            fromString(ts, reply_s[1].as<std::string>());
+//            fromString(ts, reply_s[1].as<std::string>());
 
             impl::PelengatedInfo rd{reply_s[2].as<double>(),reply_s[3].as<double>(),reply_s[4].as<double>(),
                 reply_s[5].as<uint32_t>(),reply_s[6].as<uint32_t>(),reply_s[7].as<uint32_t>()};
