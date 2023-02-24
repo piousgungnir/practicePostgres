@@ -103,8 +103,8 @@ public:
                  "    data1                   integer,"
                  "    data2                   integer,"
                  "    data3                   integer,"
-                 "    bsd2                    integer,"
                  "    bsd1                    integer,"
+                 "    bsd2                    integer,"
                  "    sic_all_call            integer,"
                  "    pc_type                 integer,"
                  "    pc_EC                   integer,"
@@ -157,7 +157,6 @@ public:
                             "WHERE id_coordinate_point = $1");
     }
 
-//    TODO нужно замернить харкод на поля coordinate point
     void addCoordinatePoint(impl::CoordinatePoint& cp) const override {
         // Start a transaction
         pqxx::work txn(*connection);
@@ -185,6 +184,31 @@ public:
                                   1.0, 1.0, 1.0, 1.0, 1.0);
             }
         }
+
+//        txn.exec_prepared("add_coordinate_point",
+//                          cp.idCoordinatePoint, timestamp_to_str_datetime(cp.timestamp) , cp.range, cp.azimuth, cp.amplitude,
+//                          cp.mode, cp.missionCode, cp.unitCode, cp.bortNumber, cp.altitude,
+//                          cp.spi, cp.xImpulse, cp.militaryAlarm, cp.isRollCall, cp.isControlResponder,
+//                          cp.missionCodeIsGarbled, cp.unitCodeIsGarbled, cp.bortNumberIsGarbled, cp.heightIsGarbled);
+//
+//        for(const Response& reply : cp.pack ){
+//            if(isRbs(reply->raw.info.mode)){
+//                txn.exec_prepared("add_rbs_reply",
+//                                  cp.idCoordinatePoint, timestamp_to_str_datetime(cp.timestamp) , reply->distance, reply->azimuthFromDistance, reply->phase,
+//                                  reply->raw.radio.amplitude.sum, reply->raw.radio.amplitude.dif, reply->raw.radio.amplitude.pbl, reply->raw.info.mode, reply->raw.info.exInfo.rbs_modeOther.Code,
+//                                  reply->raw.info.exInfo.rbs_modeOther.SPI, reply->raw.info.exInfo.rbs_modeOther.nCode, reply->raw.info.exInfo.rbs_modeOther.nSPI, reply->raw.info.exInfo.rbs_modeOther.PBL,
+//                                  reply->raw.info.exInfo.rbs_modeOther.AW,
+//                                  reply->monopulseAzimuth, reply->monopulseCorrection, reply->phase, reply->distance, reply->azimuthFromDistance);
+//            }
+//            if(isS(reply->raw.info.mode)){
+//                txn.exec_prepared("add_s_reply",
+//                                  cp.idCoordinatePoint, timestamp_to_str_datetime(cp.timestamp) , reply->distance, reply->azimuthFromDistance, reply->phase,
+//                                  reply->raw.radio.amplitude.sum, reply->raw.radio.amplitude.dif, reply->raw.radio.amplitude.pbl, reply->raw.info.mode, reply->raw.info.exInfo.modeS.data[0],
+//                                  reply->raw.info.exInfo.modeS.data[1], reply->raw.info.exInfo.modeS.data[2], reply->raw.info.exInfo.modeS.data[3], reply->raw.info.exInfo.modeS.BDS1, reply->raw.info.exInfo.modeS.BDS2,
+//                                  reply->raw.info.exInfo.modeS.sicAllCall, reply->raw.info.exInfo.modeS.PC_type, reply->raw.info.exInfo.modeS.PC_EC,
+//                                  reply->monopulseAzimuth, reply->monopulseCorrection, reply->phase, reply->distance, reply->azimuthFromDistance);
+//            }
+//        }
 
         txn.commit();
     }
