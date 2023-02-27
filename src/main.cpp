@@ -3,13 +3,22 @@
 
 int main()
 {
-    impl::CoordinatePoint cp;
+//    impl::CoordinatePoint cp;
     DB::PostgresCPRepository PRep("postgresql://localhost:5432/default_database?user=username&password=password");
+//    auto result = PRep.getByTimeIntervalCoordinatePoints(std::chrono::high_resolution_clock::now(), std::chrono::high_resolution_clock::now());
+//    for (const auto & oneCP : result) {
+//        std::cout << "ID: " << oneCP.idCoordinatePoint << std::endl;
+//        std::cout << "Time: " << timestamp_to_str_datetime(oneCP.timestamp) << std::endl;
+//        std::cout << "Time 1 reply: " << timestamp_to_str_datetime(oneCP.pack[0]->raw.timestamp) << std::endl;
+//    }
+
 //    PRep.addCoordinatePoint(cp);
 //    PRep.getByIdCoordinatePoint(5);
-    auto responseCP = PRep.getByIdCoordinatePoint(5);
-    std::cout << "idcp: " << responseCP.idCoordinatePoint << std::endl;
+//    auto responseCP = PRep.getByIdCoordinatePoint(5);
+//    std::cout << "idcp: " << responseCP.idCoordinatePoint << std::endl;
 //    std::cout << "Time: " << timestamp_to_str_datetime(responseCP.timestamp) << std::endl;
+
+
 
 //    Timestamp st;
 //
