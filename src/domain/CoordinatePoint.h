@@ -51,6 +51,8 @@ struct CoordinatePoint
     {
     }
 
+    long idCoordinatePoint;
+    Timestamp timestamp;
     bool rejectedByTagc = false;
     double range{0}; // дистанция, на которой находится координатная точка
     double azimuth{0};
