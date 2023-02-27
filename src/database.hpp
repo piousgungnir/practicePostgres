@@ -44,7 +44,7 @@ public:
                  "    id_coordinate_point    BIGINT           not null"
                  "        constraint coordinate_point_pk"
                  "            primary key, "
-                 "    time_coordinate_point   text             not null,"
+                 "    time_coordinate_point   text             not null," // тип
                  "    range                   double precision not null,"
                  "    azimuth                 double precision not null,"
                  "    amplitude               numeric          not null,"
@@ -67,7 +67,7 @@ public:
                  "( id_coordinate_point   bigint    not null,"
 //                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
 //                 "            references coordinate_point,"
-                 "    time_reply                 text          not null,"
+                 "    time_reply                 text          not null," // тип
                  "    distance                        double precision,"
                  "    azimuth                         double precision,"
                  "    phase                           double precision,"
@@ -92,7 +92,7 @@ public:
                  "( id_coordinate_point   bigint    not null,"
 //                 "        constraint rbs_reply_coordinate_point_id_coordinate_point_fk"
 //                 "            references coordinate_point,"
-                 "    time_reply         text         not null,"
+                 "    time_reply         text         not null," // тип
                  "    distance                double precision,"
                  "    azimuth                 double precision,"
                  "    phase                   double precision,"
@@ -230,7 +230,6 @@ public:
 
 //        из-за того что полей много, так будет явней, чем способ из примера, имхо
         cp.idCoordinatePoint = response_cp[0][0].as<uint>();
-//        fromString(cp.timestamp, ); // уже не TODO написать каст
         cp.range = response_cp[0][2].as<double>();
         cp.azimuth = response_cp[0][3].as<double>();
         cp.amplitude = response_cp[0][4].as<uint16_t>();
@@ -261,15 +260,13 @@ public:
 
 
         auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", id_coordinate_point);
-        for (auto const &row: response_rbs)
-        {
-            std::cout << row[1].c_str() << '\t';
-            std::cout << std::endl;
-        }
         for(auto reply_rbs : response_rbs){
-//            тя же ло
-            Timestamp ts ; // уже не TODO каст времени в строку
-//            fromString(ts, reply_rbs[1].as<std::string>());
+
+            std::istringstream iss{reply_rbs[1].as<std::string>()};
+            std::time_t epochDateTimeRbs;
+            iss >> epochDateTimeRbs;
+            Timestamp ts = std::chrono::high_resolution_clock::from_time_t(epochDateTimeRbs);
+
 
             impl::PelengatedInfo rd{reply_rbs[2].as<double>(),reply_rbs[3].as<double>(),reply_rbs[4].as<double>(),
                                     reply_rbs[5].as<uint32_t>(),reply_rbs[6].as<uint32_t>(),reply_rbs[7].as<uint32_t>()};
@@ -301,9 +298,11 @@ public:
 
         auto response_s = txn.exec_prepared("get_s_reply_by_id", id_coordinate_point);
         for(auto reply_s : response_s){
-            //            тя же ло
-            Timestamp ts; // уже не TODO каст времени в строку
-//            fromString(ts, reply_s[1].as<std::string>());
+
+            std::istringstream iss{reply_s[1].as<std::string>()};
+            std::time_t epochDateTimeS;
+            iss >> epochDateTimeS;
+            Timestamp ts = std::chrono::high_resolution_clock::from_time_t(epochDateTimeS);
 
             impl::PelengatedInfo rd{reply_s[2].as<double>(),reply_s[3].as<double>(),reply_s[4].as<double>(),
                 reply_s[5].as<uint32_t>(),reply_s[6].as<uint32_t>(),reply_s[7].as<uint32_t>()};
