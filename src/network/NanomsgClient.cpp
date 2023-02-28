@@ -6,6 +6,8 @@
 #include <nanomsg/pipeline.h>
 #include <nanomsg/pubsub.h>
 
+#include <cctype>
+
 auto printErr = [](const std::string & str)
 { std::cerr << str.c_str() << ": " << nn_strerror(nn_errno()) << std::endl; };
 

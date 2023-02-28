@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <thread>
+#include <string>
 
 #include "IPCPoint.h"
 

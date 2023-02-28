@@ -9,8 +9,7 @@
 auto printErr = [](const std::string & str)
 { std::cerr << str.c_str() << ": " << nn_strerror(nn_errno()) << std::endl; };
 
-NanomsgPipelineServer::NanomsgPipelineServer(const std::string & publisherUrl)
-    : publisherUrl_(publisherUrl)
+NanomsgPipelineServer::NanomsgPipelineServer(const Url & publisherUrl)
 {
     if ((pub_ = nn_socket(AF_SP, NN_PUB)) < 0)
         printErr("mock block_pub");

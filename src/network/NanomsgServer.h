@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPCPoint.h"
+#include <string>
 
 using Url = std::string;
 

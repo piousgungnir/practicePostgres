@@ -3,6 +3,8 @@
 #include <cassert>
 #include <type_traits>
 
+#include "cctype"
+
 #include <pdp/AlarmBearing.h>
 #include <pdp/AtcrbsCoordinatePoint.h>
 #include <pdp/AtcrbsCoordinatePoint_v2.h>

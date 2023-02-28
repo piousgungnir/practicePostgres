@@ -12,6 +12,8 @@
 #include "domain/IRadioInfoConsumer.h"
 #include "domain/ISdpRequestsContainer.h"
 
+#include <cctype>
+#include <array>
 
 class PdpClient
     : /*public stdssr::ModeS::sse::IFieldMonitorController

@@ -1,3 +1,4 @@
+#include <array>
 #include <iostream>
 
 #include "domain/CoordinatePoint.h"
@@ -51,7 +52,6 @@ int main()
     PdpClient pdpClient(&remotePdp, nullptr, nullptr);
     CpRepositoryMock cpRep;
     remotePdp.moduleAtcrbs()->addConsumer(&cpRep);
-
 
     NanomsgPipelineClient nnSub("tcp://127.0.0.1:49900"); // TODO: get from config
     ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
