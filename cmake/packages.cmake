@@ -1,12 +1,24 @@
 #Запрос нужных для проекта библиотек
-set (TARGET_LINK_PAKCKAGES
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets}
+find_package(Threads REQUIRED)
+
+set(TARGET_LINK_PACKAGES
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 
-set (USE_MODULES_QT Core Network Widgets)
-find_package(Qt5 REQUIRED ${USE_MODULES_QT})
+set(NANOMSG_DEPEND ON)
+if (NANOMSG_DEPEND)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(PC_NANOMSQ libnanomsg)
 
-set (QT_INCLUDES ${Qt5Core_INCLUDE_DIRS} ${Qt5Network_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
+    if (NOT PC_NANOMSQ_FOUND)
+        pkg_check_modules(PC_NANOMSQ REQUIRED nanomsg)
+    endif()
 
+
+    if (PC_NANOMSQ_FOUND)
+        list(APPEND TARGET_LINK_PACKAGES ${PC_NANOMSQ_LIBRARIES})
+        include_directories(${PC_NANOMSQ_INCLUDE_DIRS})
+    else()
+        list(APPEND TARGET_LINK_PACKAGES ${PC_NANOMSQ_LIBRARIES})
+    endif()
+endif()

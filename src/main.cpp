@@ -1,7 +1,14 @@
+#include <iostream>
+
 #include "domain/CoordinatePoint.h"
+#include "domain/ICpConsumers.h"
 #include "domain/POIProtocol.h"
 
-int main()
+#include "endpoints/rli/PdpClient.h"
+
+#include "network/NanomsgClient.h"
+
+void template_main()
 {
     //ответы имеются разных типов
     // RBS, S, НРЗ
@@ -24,4 +31,35 @@ int main()
     cp.modeS; //тут информация по режиму S; возможно есть лишнее. можно на первых порах исключить вектора
     //и НРЗ также синонимы Пароль/ЕС ГРЛО
     esgrlo::CoordinatePoint nrzCp;
+}
+
+class CpRepositoryMock : public IRbs_SConsumer
+{
+public:
+    // IRbs_SConsumer interface
+    void addCp(const impl::CoordinatePoint & cp) override
+    {
+        std::cout << std::hex << cp.modeS.AA << std::dec << std::endl;
+    }
+    void addAsInfo(asinfo_t &) override{};
+};
+
+
+int main()
+{
+    RemotePdp remotePdp;
+    PdpClient pdpClient(&remotePdp, nullptr, nullptr);
+    CpRepositoryMock cpRep;
+    remotePdp.moduleAtcrbs()->addConsumer(&cpRep);
+
+
+    NanomsgPipelineClient nnSub("tcp://127.0.0.1:49900"); // TODO: get from config
+    ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
+
+
+    // eventloop на минималках
+    for (;;)
+        std::this_thread::sleep_for(std::chrono::minutes{1});
+
+    return 0;
 }
