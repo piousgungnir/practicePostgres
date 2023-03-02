@@ -388,8 +388,6 @@ public:
         return CoordinatePoints;
     }
 
-//  TODO  Метод буквально копипаста предидущего, за исключением 1 строчки c запросом sql, но разные аргументы и их колво, надо думать. Это нужно как то обернуть в 1 метод 100%,
-    //    чтобы при изменении структуры CoordinatePoint все менялось в 1 месте, но не сейчас)
     [[nodiscard]] std::vector<impl::CoordinatePoint> getByBortNumberCoordinatePoints(const uint & bort_number) const override {
         std::vector<impl::CoordinatePoint> CoordinatePoints{}; //   !!!можно сразу увеличивать размер для оптимизации, либо вообще использовать array и брать размер из sql запроса, вектор проще но спорно
         pqxx::work txn(*connection);
@@ -415,7 +413,6 @@ public:
         return CoordinatePoints;
     }
 
-//  TODO  снова копипаста, код для расшифровки ответа от бд в массив(вектор) координатных точек - идентичен (отличается только запрос к бд), нужно вынести в приватный метод
     [[nodiscard]] std::vector<impl::CoordinatePoint> getByRangeSegmentCoordinatePoints(const double & range_start,
                                                                             const double & range_end) const override {
         std::vector<impl::CoordinatePoint> CoordinatePoints{}; //   !!!можно сразу увеличивать размер для оптимизации, либо вообще использовать array и брать размер из sql запроса, вектор проще но спорно
