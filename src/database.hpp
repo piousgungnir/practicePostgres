@@ -345,7 +345,7 @@ public:
             std::cout << "RBS check " << response_s[i][0].as<int>() << std::endl;
         }
         for(auto row_s : response_s){
-            Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   можно не использовать перемменную ts
+            Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   TODO можно не использовать перемменную ts, проверить каст с numeric
 
             impl::PelengatedInfo rd{row_s[2].as<double>(),row_s[3].as<double>(),row_s[4].as<double>(),
                 row_s[5].as<uint32_t>(),row_s[6].as<uint32_t>(),row_s[7].as<uint32_t>()};
@@ -486,7 +486,7 @@ public:
         return CoordinatePoints;
     }
 
-//    Метод буквально копипаста предидущего, за исключением 1 строчки c запросом sql, но разные аргументы и их колво, надо думать. Это нужно как то обернуть в 1 метод 100%,
+//  TODO  Метод буквально копипаста предидущего, за исключением 1 строчки c запросом sql, но разные аргументы и их колво, надо думать. Это нужно как то обернуть в 1 метод 100%,
     //    чтобы при изменении структуры CoordinatePoint все менялось в 1 месте, но не сейчас)
     std::vector<impl::CoordinatePoint> getByBortNumberCoordinatePoints(const uint & bort_number) const override {
         std::vector<impl::CoordinatePoint> CoordinatePoints{}; //   !!!можно сразу увеличивать размер для оптимизации, либо вообще использовать array и брать размер из sql запроса, вектор проще но спорно
@@ -589,7 +589,7 @@ public:
         return CoordinatePoints;
     }
 
-//    снова копипаста, код для расшифровки ответа от бд в массив(вектор) координатных точек - идентичен (отличается только запрос к бд), нужно вынести в приватный метод
+//  TODO  снова копипаста, код для расшифровки ответа от бд в массив(вектор) координатных точек - идентичен (отличается только запрос к бд), нужно вынести в приватный метод
     std::vector<impl::CoordinatePoint> getByRangeSegmentCoordinatePoints(const double & range_start,
                                                                             const double & range_end) const override {
         std::vector<impl::CoordinatePoint> CoordinatePoints{}; //   !!!можно сразу увеличивать размер для оптимизации, либо вообще использовать array и брать размер из sql запроса, вектор проще но спорно

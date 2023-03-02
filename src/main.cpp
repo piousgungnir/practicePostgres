@@ -67,6 +67,9 @@ int main()
     NanomsgPipelineClient nnSub("tcp://172.17.0.1:49900"); // TODO: get from config
     ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
 
+//    auto testCp = cpRep.PRep->getByIdCoordinatePoint(10);
+//    std::cout << testCp.idCoordinatePoint << std::endl;
+//    std::cout << timestamp_to_str_timeonly_with_ms(testCp.pack[0])->raw.timestamp <<
 
     // eventloop на минималках
     for (;;)
