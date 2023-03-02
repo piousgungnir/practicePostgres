@@ -9,6 +9,10 @@
 
 #include "network/NanomsgClient.h"
 
+#include "database.hpp"
+
+long id = 0;
+
 void template_main()
 {
     //ответы имеются разных типов
@@ -38,9 +42,14 @@ class CpRepositoryMock : public IRbs_SConsumer
 {
 public:
     // IRbs_SConsumer interface
+    std::unique_ptr<DB::PostgresCPRepository> PRep;
+    void initRep(const std::string & dbUrl){
+        PRep = std::make_unique<DB::PostgresCPRepository>(dbUrl);
+    }
     void addCp(const impl::CoordinatePoint & cp) override
     {
-        std::cout << std::hex << cp.modeS.AA << std::dec << std::endl;
+        PRep->addCoordinatePoint(cp);
+//        std::cout << std::hex << cp.modeS.AA << std::dec << std::endl;
     }
     void addAsInfo(asinfo_t &) override{};
 };
@@ -51,6 +60,7 @@ int main()
     RemotePdp remotePdp;
     PdpClient pdpClient(&remotePdp, nullptr, nullptr);
     CpRepositoryMock cpRep;
+    cpRep.initRep("postgresql://localhost:5432/default_database?user=username&password=password");
     remotePdp.moduleAtcrbs()->addConsumer(&cpRep);
 
 
