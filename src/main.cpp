@@ -53,7 +53,8 @@ int main()
     CpRepositoryMock cpRep;
     remotePdp.moduleAtcrbs()->addConsumer(&cpRep);
 
-    NanomsgPipelineClient nnSub("tcp://127.0.0.1:49900"); // TODO: get from config
+
+    NanomsgPipelineClient nnSub("tcp://172.17.0.1:49900"); // TODO: get from config
     ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
 
 

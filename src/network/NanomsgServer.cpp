@@ -10,11 +10,12 @@ auto printErr = [](const std::string & str)
 { std::cerr << str.c_str() << ": " << nn_strerror(nn_errno()) << std::endl; };
 
 NanomsgPipelineServer::NanomsgPipelineServer(const Url & publisherUrl)
+    : publisherUrl_(publisherUrl)
 {
     if ((pub_ = nn_socket(AF_SP, NN_PUB)) < 0)
-        printErr("mock block_pub");
+        printErr("fail to create socket");
     if (nn_bind(pub_, publisherUrl_.c_str()) < 0)
-        printErr("mock block_pub");
+        printErr("fail to bind" + publisherUrl_);
 }
 
 NanomsgPipelineServer::~NanomsgPipelineServer()
