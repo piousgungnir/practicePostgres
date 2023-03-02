@@ -14,7 +14,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src/proto_cpp")
 include_directories("${PROJECT_SOURCE_DIR}/src/proto_cpp/mvrl-k")
 
 
-set(ssr_pdp_report_lib ${HEADERS_INCLUDE} ${SOURCES_INCLUDE})
+set(ssr_pdp_report_lib ${HEADERS_INCLUDE} ${SOURCES_INCLUDE} src/database.hpp)
 
 add_library(libssrpdpreport STATIC ${ssr_pdp_report_lib})
 

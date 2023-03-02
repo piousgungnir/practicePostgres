@@ -9,6 +9,10 @@
 
 #include "network/NanomsgClient.h"
 
+#include "database.hpp"
+
+long id = 0;
+
 void template_main()
 {
     //ответы имеются разных типов
@@ -38,9 +42,14 @@ class CpRepositoryMock : public IRbs_SConsumer
 {
 public:
     // IRbs_SConsumer interface
+    std::unique_ptr<DB::PostgresCPRepository> PRep;
+    void initRep(const std::string & dbUrl){
+        PRep = std::make_unique<DB::PostgresCPRepository>(dbUrl);
+    }
     void addCp(const impl::CoordinatePoint & cp) override
     {
-        std::cout << std::hex << cp.modeS.AA << std::dec << std::endl;
+        PRep->addCoordinatePoint(cp);
+//        std::cout << std::hex << cp.modeS.AA << std::dec << std::endl;
     }
     void addAsInfo(asinfo_t &) override{};
 };
@@ -51,12 +60,44 @@ int main()
     RemotePdp remotePdp;
     PdpClient pdpClient(&remotePdp, nullptr, nullptr);
     CpRepositoryMock cpRep;
+    cpRep.initRep("postgresql://localhost:5432/default_database?user=username&password=password");
     remotePdp.moduleAtcrbs()->addConsumer(&cpRep);
 
 
     NanomsgPipelineClient nnSub("tcp://172.17.0.1:49900"); // TODO: get from config
     ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
 
+//    auto testCp = cpRep.PRep->getByIdCoordinatePoint(11);
+//    std::cout << testCp.idCoordinatePoint;
+////    std::cout << timestamp_to_str_timeonly_with_ms(testCp.timestamp) << std::endl;
+//    for (const auto & reply : testCp.pack){
+//        if(isRbs(reply->raw.info.mode)){
+//            std::cout << timestamp_to_str_timeonly_with_ms(reply->raw.timestamp);
+//            std::cout << " " << reply->monopulseAzimuth;
+//            std::cout << " " << reply->distance << std::endl;
+//        }
+//        if(isS(reply->raw.info.mode)){
+//            std::cout << timestamp_to_str_timeonly_with_ms(reply->raw.timestamp);
+//            std::cout << " " << reply->monopulseAzimuth;
+//            std::cout << " " << reply->distance << std::endl;
+//        }
+//    }
+
+//    auto testCps = cpRep.PRep->getByBortNumberCoordinatePoints(4076);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
+
+//    auto testCps = cpRep.PRep->getByRangeSegmentCoordinatePoints(10, 3000);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
+
+//    std::chrono::high_resolution_clock::time_point t;
+//    auto testCps = cpRep.PRep->getByTimeIntervalCoordinatePoints(t, t);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
 
     // eventloop на минималках
     for (;;)
