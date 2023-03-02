@@ -68,8 +68,36 @@ int main()
     ipc::connect(&pdpClient, &nnSub, ipc::ConnectionWay::OnlyReceive);
 
 //    auto testCp = cpRep.PRep->getByIdCoordinatePoint(10);
-//    std::cout << testCp.idCoordinatePoint << std::endl;
-//    std::cout << timestamp_to_str_timeonly_with_ms(testCp.pack[0])->raw.timestamp <<
+//    std::cout << testCp.idCoordinatePoint;
+////    std::cout << timestamp_to_str_timeonly_with_ms(testCp.timestamp) << std::endl;
+//    for (const auto & reply : testCp.pack){
+//        if(isRbs(reply->raw.info.mode)){
+//            std::cout << timestamp_to_str_timeonly_with_ms(reply->raw.timestamp);
+//            std::cout << " " << reply->monopulseAzimuth;
+//            std::cout << " " << reply->distance << std::endl;
+//        }
+//        if(isS(reply->raw.info.mode)){
+//            std::cout << timestamp_to_str_timeonly_with_ms(reply->raw.timestamp);
+//            std::cout << " " << reply->monopulseAzimuth;
+//            std::cout << " " << reply->distance << std::endl;
+//        }
+//    }
+
+//    auto testCps = cpRep.PRep->getByBortNumberCoordinatePoints(4076);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
+
+//    auto testCps = cpRep.PRep->getByRangeSegmentCoordinatePoints(10, 3000);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
+
+//    std::chrono::high_resolution_clock::time_point t;
+//    auto testCps = cpRep.PRep->getByTimeIntervalCoordinatePoints(t, t);
+//    for (const auto & cp : testCps) {
+//        std::cout << cp.idCoordinatePoint << std::endl;
+//    }
 
     // eventloop на минималках
     for (;;)

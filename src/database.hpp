@@ -283,32 +283,32 @@ public:
 //        из-за того что полей много, так будет явней, чем способ из примера, имхо
 //        можно вынести сборку координатной точки (с ответами) в отдельный приватный метод, но осилить передачу pqxx:result в метод не смог (вроде и двумерный си массив, но тип не стандартный, иде ругается)
         impl::CoordinatePoint cp;
-        cp.timestamp = stringToTimePoint(response_cp[0][1].as<std::string>());
         cp.idCoordinatePoint = response_cp[0][0].as<uint>();
+        cp.timestamp = stringToTimePoint(response_cp[0][1].as<std::string>());
         cp.range = response_cp[0][2].as<double>();
         cp.azimuth = response_cp[0][3].as<double>();
         cp.amplitude = response_cp[0][4].as<uint16_t>();
         cp.mode = static_cast<SystemMode> (response_cp[0][5].as<int>());
-        cp.missionCode = response_cp[0][5].as<int>();
-        cp.unitCode = response_cp[0][6].as<int>();
-        cp.bortNumber = response_cp[0][7].as<int>();
-        cp.altitude = response_cp[0][8].as<int>();
-        cp.spi = response_cp[0][9].as<bool>();
-        cp.xImpulse = response_cp[0][10].as<bool>();
-        cp.militaryAlarm = response_cp[0][11].as<bool>();
-        cp.isRollCall = response_cp[0][12].as<bool>();
-        cp.isControlResponder = response_cp[0][13].as<bool>();
-        cp.missionCodeIsGarbled = response_cp[0][14].as<bool>();
-        cp.unitCodeIsGarbled = response_cp[0][15].as<bool>();
-        cp.bortNumberIsGarbled = response_cp[0][16].as<bool>();
-        cp.heightIsGarbled = response_cp[0][17].as<bool>();
+        cp.missionCode = response_cp[0][6].as<int>();
+        cp.unitCode = response_cp[0][7].as<int>();
+        cp.bortNumber = response_cp[0][8].as<int>();
+        cp.altitude = response_cp[0][9].as<int>();
+        cp.spi = response_cp[0][10].as<bool>();
+        cp.xImpulse = response_cp[0][11].as<bool>();
+        cp.militaryAlarm = response_cp[0][12].as<bool>();
+        cp.isRollCall = response_cp[0][13].as<bool>();
+        cp.isControlResponder = response_cp[0][14].as<bool>();
+        cp.missionCodeIsGarbled = response_cp[0][15].as<bool>();
+        cp.unitCodeIsGarbled = response_cp[0][16].as<bool>();
+        cp.bortNumberIsGarbled = response_cp[0][17].as<bool>();
+        cp.heightIsGarbled = response_cp[0][18].as<bool>();
 
 //        auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", id_coordinate_point);
 
         auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", id_coordinate_point);
-        for(int i = 0; i < response_rbs.size(); i++){
-            std::cout << "RBS check " << response_rbs[i][0].as<int>() << std::endl;
-        }
+//        for(int i = 0; i < response_rbs.size(); i++){
+//            std::cout << "RBS check " << response_rbs[i][0].as<int>() << std::endl;
+//        }
         for(auto row_rbs : response_rbs){
             Timestamp ts = stringToTimePoint(row_rbs[1].as<std::string>()); //   можно не использовать перемменную ts
 
@@ -323,27 +323,28 @@ public:
             resSigInf.mode = static_cast<interrogator_v3::Mode> (row_rbs[8].as<int>());
 
             resSigInf.exInfo.rbs_modeOther.Code = row_rbs[9].as<uint32_t>();
-            resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[10].as<uint32_t>();
-            resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[11].as<uint32_t>();
-            resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[12].as<uint32_t>();
-            resSigInf.exInfo.rbs_modeOther.AW = row_rbs[13].as<uint32_t>();
+            resSigInf.exInfo.rbs_modeOther.SPI = row_rbs[10].as<uint32_t>();
+            resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[11].as<uint32_t>();
+            resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[12].as<uint32_t>();
+            resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[13].as<uint32_t>();
+            resSigInf.exInfo.rbs_modeOther.AW = row_rbs[14].as<uint32_t>();
 
             impl::RawAnswer rans{ts, rd, resSigInf};
 
             impl::Answer ans(rans);
-            ans.monopulseAzimuth = row_rbs[14].as<double>();
-            ans.monopulseCorrection = row_rbs[15].as<double>();
-            ans.phase = row_rbs[16].as<double>();
-            ans.distance = row_rbs[17].as<double>();
-            ans.azimuthFromDistance = row_rbs[18].as<double>();
+            ans.monopulseAzimuth = row_rbs[15].as<double>();
+            ans.monopulseCorrection = row_rbs[16].as<double>();
+            ans.phase = row_rbs[17].as<double>();
+            ans.distance = row_rbs[18].as<double>();
+            ans.azimuthFromDistance = row_rbs[19].as<double>();
 
             cp.pack.push_back(std::make_shared<impl::Answer>(ans));
         }
 
         auto response_s = txn.exec_prepared("get_s_reply_by_id", id_coordinate_point);
-        for(int i = 0; i < response_s.size(); i++){
-            std::cout << "RBS check " << response_s[i][0].as<int>() << std::endl;
-        }
+//        for(int i = 0; i < response_s.size(); i++){
+//            std::cout << "RBS check " << response_s[i][0].as<int>() << std::endl;
+//        }
         for(auto row_s : response_s){
             Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   TODO можно не использовать перемменную ts, проверить каст с numeric
 
@@ -397,19 +398,19 @@ public:
             cp.azimuth = row_cp[3].as<double>();
             cp.amplitude = row_cp[4].as<uint16_t>();
             cp.mode = static_cast<SystemMode> (row_cp[5].as<int>());
-            cp.missionCode = row_cp[5].as<int>();
-            cp.unitCode = row_cp[6].as<int>();
-            cp.bortNumber = row_cp[7].as<int>();
-            cp.altitude = row_cp[8].as<int>();
-            cp.spi = row_cp[9].as<bool>();
-            cp.xImpulse = row_cp[10].as<bool>();
-            cp.militaryAlarm = row_cp[11].as<bool>();
-            cp.isRollCall = row_cp[12].as<bool>();
-            cp.isControlResponder = row_cp[13].as<bool>();
-            cp.missionCodeIsGarbled = row_cp[14].as<bool>();
-            cp.unitCodeIsGarbled = row_cp[15].as<bool>();
-            cp.bortNumberIsGarbled = row_cp[16].as<bool>();
-            cp.heightIsGarbled = row_cp[17].as<bool>();
+            cp.missionCode = row_cp[6].as<int>();
+            cp.unitCode = row_cp[7].as<int>();
+            cp.bortNumber = row_cp[8].as<int>();
+            cp.altitude = row_cp[9].as<int>();
+            cp.spi = row_cp[10].as<bool>();
+            cp.xImpulse = row_cp[11].as<bool>();
+            cp.militaryAlarm = row_cp[12].as<bool>();
+            cp.isRollCall = row_cp[13].as<bool>();
+            cp.isControlResponder = row_cp[14].as<bool>();
+            cp.missionCodeIsGarbled = row_cp[15].as<bool>();
+            cp.unitCodeIsGarbled = row_cp[16].as<bool>();
+            cp.bortNumberIsGarbled = row_cp[17].as<bool>();
+            cp.heightIsGarbled = row_cp[18].as<bool>();
 
             auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", row_cp[0].as<uint>());
             for(auto row_rbs : response_rbs){
@@ -426,26 +427,27 @@ public:
                 resSigInf.mode = static_cast<interrogator_v3::Mode> (row_rbs[8].as<int>());
 
                 resSigInf.exInfo.rbs_modeOther.Code = row_rbs[9].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[10].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[11].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[12].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.SPI = row_rbs[10].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[11].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[12].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[14].as<uint32_t>();
 
                 impl::RawAnswer rans{ts, rd, resSigInf};
 
                 impl::Answer ans(rans);
-                ans.monopulseAzimuth = row_rbs[14].as<double>();
-                ans.monopulseCorrection = row_rbs[15].as<double>();
-                ans.phase = row_rbs[16].as<double>();
-                ans.distance = row_rbs[17].as<double>();
-                ans.azimuthFromDistance = row_rbs[18].as<double>();
+                ans.monopulseAzimuth = row_rbs[15].as<double>();
+                ans.monopulseCorrection = row_rbs[16].as<double>();
+                ans.phase = row_rbs[17].as<double>();
+                ans.distance = row_rbs[18].as<double>();
+                ans.azimuthFromDistance = row_rbs[19].as<double>();
 
                 cp.pack.push_back(std::make_shared<impl::Answer>(ans));
             }
 
             auto response_s = txn.exec_prepared("get_s_reply_by_id", row_cp[0].as<uint>());
             for(auto row_s : response_s){
-                Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   можно не использовать перемменную ts
+                Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   TODO можно не использовать перемменную ts, проверить каст с numeric
 
                 impl::PelengatedInfo rd{row_s[2].as<double>(),row_s[3].as<double>(),row_s[4].as<double>(),
                                         row_s[5].as<uint32_t>(),row_s[6].as<uint32_t>(),row_s[7].as<uint32_t>()};
@@ -502,19 +504,19 @@ public:
             cp.azimuth = row_cp[3].as<double>();
             cp.amplitude = row_cp[4].as<uint16_t>();
             cp.mode = static_cast<SystemMode> (row_cp[5].as<int>());
-            cp.missionCode = row_cp[5].as<int>();
-            cp.unitCode = row_cp[6].as<int>();
-            cp.bortNumber = row_cp[7].as<int>();
-            cp.altitude = row_cp[8].as<int>();
-            cp.spi = row_cp[9].as<bool>();
-            cp.xImpulse = row_cp[10].as<bool>();
-            cp.militaryAlarm = row_cp[11].as<bool>();
-            cp.isRollCall = row_cp[12].as<bool>();
-            cp.isControlResponder = row_cp[13].as<bool>();
-            cp.missionCodeIsGarbled = row_cp[14].as<bool>();
-            cp.unitCodeIsGarbled = row_cp[15].as<bool>();
-            cp.bortNumberIsGarbled = row_cp[16].as<bool>();
-            cp.heightIsGarbled = row_cp[17].as<bool>();
+            cp.missionCode = row_cp[6].as<int>();
+            cp.unitCode = row_cp[7].as<int>();
+            cp.bortNumber = row_cp[8].as<int>();
+            cp.altitude = row_cp[9].as<int>();
+            cp.spi = row_cp[10].as<bool>();
+            cp.xImpulse = row_cp[11].as<bool>();
+            cp.militaryAlarm = row_cp[12].as<bool>();
+            cp.isRollCall = row_cp[13].as<bool>();
+            cp.isControlResponder = row_cp[14].as<bool>();
+            cp.missionCodeIsGarbled = row_cp[15].as<bool>();
+            cp.unitCodeIsGarbled = row_cp[16].as<bool>();
+            cp.bortNumberIsGarbled = row_cp[17].as<bool>();
+            cp.heightIsGarbled = row_cp[18].as<bool>();
 
             auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", row_cp[0].as<uint>());
             for(auto row_rbs : response_rbs){
@@ -531,26 +533,27 @@ public:
                 resSigInf.mode = static_cast<interrogator_v3::Mode> (row_rbs[8].as<int>());
 
                 resSigInf.exInfo.rbs_modeOther.Code = row_rbs[9].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[10].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[11].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[12].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.SPI = row_rbs[10].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[11].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[12].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[14].as<uint32_t>();
 
                 impl::RawAnswer rans{ts, rd, resSigInf};
 
                 impl::Answer ans(rans);
-                ans.monopulseAzimuth = row_rbs[14].as<double>();
-                ans.monopulseCorrection = row_rbs[15].as<double>();
-                ans.phase = row_rbs[16].as<double>();
-                ans.distance = row_rbs[17].as<double>();
-                ans.azimuthFromDistance = row_rbs[18].as<double>();
+                ans.monopulseAzimuth = row_rbs[15].as<double>();
+                ans.monopulseCorrection = row_rbs[16].as<double>();
+                ans.phase = row_rbs[17].as<double>();
+                ans.distance = row_rbs[18].as<double>();
+                ans.azimuthFromDistance = row_rbs[19].as<double>();
 
                 cp.pack.push_back(std::make_shared<impl::Answer>(ans));
             }
 
             auto response_s = txn.exec_prepared("get_s_reply_by_id", row_cp[0].as<uint>());
             for(auto row_s : response_s){
-                Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   можно не использовать перемменную ts
+                Timestamp ts = stringToTimePoint(row_s[1].as<std::string>()); //   TODO можно не использовать перемменную ts, проверить каст с numeric
 
                 impl::PelengatedInfo rd{row_s[2].as<double>(),row_s[3].as<double>(),row_s[4].as<double>(),
                                         row_s[5].as<uint32_t>(),row_s[6].as<uint32_t>(),row_s[7].as<uint32_t>()};
@@ -605,19 +608,19 @@ public:
             cp.azimuth = row_cp[3].as<double>();
             cp.amplitude = row_cp[4].as<uint16_t>();
             cp.mode = static_cast<SystemMode> (row_cp[5].as<int>());
-            cp.missionCode = row_cp[5].as<int>();
-            cp.unitCode = row_cp[6].as<int>();
-            cp.bortNumber = row_cp[7].as<int>();
-            cp.altitude = row_cp[8].as<int>();
-            cp.spi = row_cp[9].as<bool>();
-            cp.xImpulse = row_cp[10].as<bool>();
-            cp.militaryAlarm = row_cp[11].as<bool>();
-            cp.isRollCall = row_cp[12].as<bool>();
-            cp.isControlResponder = row_cp[13].as<bool>();
-            cp.missionCodeIsGarbled = row_cp[14].as<bool>();
-            cp.unitCodeIsGarbled = row_cp[15].as<bool>();
-            cp.bortNumberIsGarbled = row_cp[16].as<bool>();
-            cp.heightIsGarbled = row_cp[17].as<bool>();
+            cp.missionCode = row_cp[6].as<int>();
+            cp.unitCode = row_cp[7].as<int>();
+            cp.bortNumber = row_cp[8].as<int>();
+            cp.altitude = row_cp[9].as<int>();
+            cp.spi = row_cp[10].as<bool>();
+            cp.xImpulse = row_cp[11].as<bool>();
+            cp.militaryAlarm = row_cp[12].as<bool>();
+            cp.isRollCall = row_cp[13].as<bool>();
+            cp.isControlResponder = row_cp[14].as<bool>();
+            cp.missionCodeIsGarbled = row_cp[15].as<bool>();
+            cp.unitCodeIsGarbled = row_cp[16].as<bool>();
+            cp.bortNumberIsGarbled = row_cp[17].as<bool>();
+            cp.heightIsGarbled = row_cp[18].as<bool>();
 
             auto response_rbs = txn.exec_prepared("get_rbs_reply_by_id", row_cp[0].as<uint>());
             for(auto row_rbs : response_rbs){
@@ -634,19 +637,20 @@ public:
                 resSigInf.mode = static_cast<interrogator_v3::Mode> (row_rbs[8].as<int>());
 
                 resSigInf.exInfo.rbs_modeOther.Code = row_rbs[9].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[10].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[11].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[12].as<uint32_t>();
-                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.SPI = row_rbs[10].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nCode = row_rbs[11].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.nSPI = row_rbs[12].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.PBL = row_rbs[13].as<uint32_t>();
+                resSigInf.exInfo.rbs_modeOther.AW = row_rbs[14].as<uint32_t>();
 
                 impl::RawAnswer rans{ts, rd, resSigInf};
 
                 impl::Answer ans(rans);
-                ans.monopulseAzimuth = row_rbs[14].as<double>();
-                ans.monopulseCorrection = row_rbs[15].as<double>();
-                ans.phase = row_rbs[16].as<double>();
-                ans.distance = row_rbs[17].as<double>();
-                ans.azimuthFromDistance = row_rbs[18].as<double>();
+                ans.monopulseAzimuth = row_rbs[15].as<double>();
+                ans.monopulseCorrection = row_rbs[16].as<double>();
+                ans.phase = row_rbs[17].as<double>();
+                ans.distance = row_rbs[18].as<double>();
+                ans.azimuthFromDistance = row_rbs[19].as<double>();
 
                 cp.pack.push_back(std::make_shared<impl::Answer>(ans));
             }
